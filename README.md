@@ -52,3 +52,9 @@ the manifest, not as a pass.
 - No independent measurement: the operator reviewed the release, so every result is labelled
   `author_operated`.
 - No real-world effect, network call or provider call occurred in any run here.
+
+## Licence
+
+Code in this repository (the JSON Schema, the validator, scripts/check.sh) is Apache-2.0; the prose
+(mapping.md, README.md, records/README.md) is CC-BY-4.0. Both match the licence defaults named in the
+working group charter.
