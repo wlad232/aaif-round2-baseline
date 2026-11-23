@@ -1,0 +1,77 @@
+{
+  "bundle": "aaif-round2-baseline-2026-11-23",
+  "created_at": "2026-11-23T14:33:03Z",
+  "purpose": "Author-operated replay and baseline mapping for the AAIF Identity & Trust Round 2 comparison (wg-identity-and-trust#13, terms draft 0.2).",
+  "implementation": {
+    "name": "Radiolaria OS (reference release)",
+    "release": "radiolaria-os-reference-g6b6f-v01",
+    "revision": "800f38c3407b3f4ec93dc943c977ffeecb614881",
+    "source": "https://gitlab.com/radiolaria/radiolaria-os"
+  },
+  "operator": {
+    "name": "Vlad Kostitsyn / Alakris",
+    "label": "author_operated",
+    "role": "source and test review of the pinned revision; replay runner"
+  },
+  "environment": {
+    "os": "macOS 27.2.1 (Build 26B131)",
+    "arch": "arm64",
+    "cpu": "Apple M4",
+    "python": "3.14.7",
+    "install": "python3 -m venv .venv; .venv/bin/python -m pip install -e .; pip check clean"
+  },
+  "commands": [
+    {
+      "command": ".venv/bin/python -m demo.run_action_commit_packet_lifecycle_g2_a_v01",
+      "working_directory": "git checkout at the pinned revision, repository root",
+      "exit_code": 0,
+      "finished_at": "2026-11-23T14:31:58Z",
+      "output": "run/acp-lifecycle-g2-a5.json",
+      "output_bytes": 14644,
+      "output_sha256": "8bbb8203a9bb7819c3370d95ac68c9bddd6a1f48036caa850f47bcdc19c6e4f2"
+    },
+    {
+      "command": ".venv/bin/python -m demo.run_action_packet_portability_v01",
+      "working_directory": "git checkout at the pinned revision, repository root",
+      "exit_code": 0,
+      "finished_at": "2026-11-23T14:32:19Z",
+      "output": "run/action-packet-portability.json",
+      "output_bytes": 2904644,
+      "output_sha256": "8f387991ab1b2abdb9bac212d6491b2eee65fbe95240822bf5f5f969958a5647"
+    },
+    {
+      "command": ".venv/bin/python -m demo.run_audit_hash_chain",
+      "working_directory": "git checkout at the pinned revision, repository root",
+      "exit_code": 0,
+      "finished_at": "2026-11-23T14:32:19Z",
+      "output": "run/audit-hash-chain.log",
+      "output_bytes": 9480,
+      "output_sha256": "b97bd760d19dc3a35fbcb3911935d937fe70eeb2ee64bb90f7b21dd57602e102"
+    }
+  ],
+  "attempts_not_completed": [
+    {
+      "command": ".venv/bin/python -m demo.run_kernel_conformance_v01",
+      "status": "aborted",
+      "wall_seconds": 1700,
+      "exit_code": 143,
+      "note": "CPU-bound with no incremental output on this host; terminated after ~28 minutes. The full deterministic gauntlet needs a longer budget or a different host; it is not part of this bundle."
+    }
+  ],
+  "observed_kernel_properties": {
+    "real_world_effects_count": 0,
+    "network_calls": 0,
+    "provider_calls": 0,
+    "adapter_calls": 0,
+    "immutable_history_proven": true,
+    "report_profiles": [
+      "action_commit_packet_lifecycle_g2_a5_report_v01"
+    ]
+  },
+  "not_claimed": [
+    "production readiness or security certification",
+    "conformance to the AAIF Reference Architecture",
+    "independent measurement: the operator reviewed this revision, so the runs are author-operated",
+    "any real-world effect, network call or provider call"
+  ]
+}

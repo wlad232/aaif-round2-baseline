@@ -1,0 +1,29 @@
+{
+  "schema_version": "aaif-aad-case-record/0.1",
+  "implementation": {
+    "name": "example-implementation",
+    "release": "example-2026.11",
+    "revision": "0000000000000000000000000000000000000000",
+    "operator": "example-operator",
+    "label": "author_operated",
+    "synthetic": true
+  },
+  "case": "5a",
+  "declared": { "status": "measured" },
+  "decision": {
+    "time": "2026-11-20T11:00:02Z",
+    "outcome": "refused",
+    "reason_code": "ALLOCATION_EXHAUSTED"
+  },
+  "limit": {
+    "kind": "fixed_allocation",
+    "evidence": "allocation of 10 actions from an aggregate of 30, held by the enforcer; count 10/10 at the decision",
+    "aggregate_scope": "organisation A and organisation B under one allocation policy"
+  },
+  "in_flight": { "policy": "not_applicable", "observed": "not_applicable" },
+  "evidence": {
+    "record_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "residual": "The aggregate claim holds only across the organisations covered by the same allocation policy; an unused share in one allocation cannot serve another.",
+  "notes": "Illustrative shape only. Not a measurement, no implementation is named."
+}
