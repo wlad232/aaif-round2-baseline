@@ -1,5 +1,5 @@
 {
-  "schema_version": "aaif-aad-case-record/0.1",
+  "schema_version": "aaif-aad-case-record/0.2",
   "implementation": {
     "name": "example-implementation",
     "release": "example-2026.11",
@@ -9,7 +9,9 @@
     "synthetic": true
   },
   "case": "5a",
-  "declared": { "status": "measured" },
+  "declared": {
+    "status": "measured"
+  },
   "decision": {
     "time": "2026-11-20T11:00:02Z",
     "outcome": "refused",
@@ -20,9 +22,13 @@
     "evidence": "allocation of 10 actions from an aggregate of 30, held by the enforcer; count 10/10 at the decision",
     "aggregate_scope": "organisation A and organisation B under one allocation policy"
   },
-  "in_flight": { "policy": "not_applicable", "observed": "not_applicable" },
+  "in_flight": {
+    "policy": "not_applicable",
+    "observed": "not_applicable"
+  },
   "evidence": {
-    "record_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    "record_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "scope": "published_bundle"
   },
   "residual": "The aggregate claim holds only across the organisations covered by the same allocation policy; an unused share in one allocation cannot serve another.",
   "notes": "Illustrative shape only. Not a measurement, no implementation is named."

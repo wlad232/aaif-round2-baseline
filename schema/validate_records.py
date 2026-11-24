@@ -22,10 +22,12 @@ from pathlib import Path
 
 REV = re.compile(r"^[0-9a-f]{40}$")
 SHA = re.compile(r"^[0-9a-f]{64}$")
-CODE = re.compile(r"^[A-Z][A-Z0-9_]{2,63}$")
+CODE = re.compile(r"^[A-Za-z][A-Za-z0-9_.:-]{1,63}$")
 CASES = {"1", "2", "3", "4", "5", "5a", "5b", "6", "7", "8"}
 LABELS = {"independently_run", "author_operated"}
 STATUS = {"measured", "not_measured", "not_applicable", "not_emitted"}
+SOURCE = {"decision_record", "public_status_at_decision", "not_applicable"}
+EVIDENCE_SCOPE = {"published_bundle", "private_record"}
 POLICY = {"stop", "finish_within", "not_applicable"}
 OBSERVED = {"stopped", "finished", "unknown", "not_applicable"}
 OUTCOME = {"allowed", "refused", "not_observed"}
@@ -53,8 +55,8 @@ def check(record: object) -> list[str]:
     if not isinstance(record, dict):
         return ["record: not an object"]
 
-    if record.get("schema_version") != "aaif-aad-case-record/0.1":
-        errors.append("schema_version: must be aaif-aad-case-record/0.1")
+    if record.get("schema_version") != "aaif-aad-case-record/0.2":
+        errors.append("schema_version: must be aaif-aad-case-record/0.2")
 
     implementation = record.get("implementation")
     if not isinstance(implementation, dict):
@@ -99,13 +101,21 @@ def check(record: object) -> list[str]:
             if decision.get("outcome") not in OUTCOME:
                 errors.append(f"decision.outcome: must be one of {sorted(OUTCOME)}")
             if isinstance(decision.get("reason_code"), str) and not CODE.match(decision["reason_code"]):
-                errors.append("decision.reason_code: must be UPPER_SNAKE_CASE")
+                errors.append("decision.reason_code: must start with a letter and use letters, digits, _ . : - only")
+            if "status_source" in decision and decision["status_source"] not in SOURCE:
+                errors.append(f"decision.status_source: must be one of {sorted(SOURCE)}")
+            if "status_observed" in decision and not isinstance(decision["status_observed"], bool):
+                errors.append("decision.status_observed: must be a boolean")
             if "time" in decision and not is_time(decision["time"]):
                 errors.append("decision.time: must be an ISO-8601 date-time")
             if case == "3":
-                for key in ("status_age_s", "declared_bound_s"):
-                    if not isinstance(decision.get(key), (int, float)):
-                        errors.append(f"decision.{key}: required for case 3")
+                if not isinstance(decision.get("declared_bound_s"), (int, float)):
+                    errors.append("decision.declared_bound_s: required for case 3")
+                observed = decision.get("status_observed", True)
+                if observed and not isinstance(decision.get("status_age_s"), (int, float)):
+                    errors.append("decision.status_age_s: required for case 3 when status_observed is true")
+                if not observed and "status_age_s" in decision:
+                    errors.append("decision.status_age_s: must be absent when status_observed is false")
 
     in_flight = record.get("in_flight")
     if in_flight is not None:
@@ -130,6 +140,16 @@ def check(record: object) -> list[str]:
         sha = evidence.get("record_sha256")
         if not isinstance(sha, str) or not SHA.match(sha):
             errors.append("evidence.record_sha256: must be a 64-character lowercase hex digest")
+        if "scope" in evidence and evidence["scope"] not in EVIDENCE_SCOPE:
+            errors.append(f"evidence.scope: must be one of {sorted(EVIDENCE_SCOPE)}")
+        verify = evidence.get("verify")
+        if verify is not None:
+            if not isinstance(verify, dict):
+                errors.append("evidence.verify: not an object")
+            else:
+                unknown = set(verify) - {"scheme", "key", "command", "uri"}
+                if unknown:
+                    errors.append(f"evidence.verify: unknown keys {sorted(unknown)}")
 
     residual = record.get("residual")
     if not isinstance(residual, str) or not residual.strip():

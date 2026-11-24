@@ -1,106 +1,385 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/wlad232/aaif-round2-baseline/schema/case-record.schema.json",
-  "title": "AAIF I&T delegated-authority case record (0.1)",
-  "description": "One record per implementation per case for a comparison round. Fields follow the record requirements drafted in wg-identity-and-trust #13 (terms draft 0.2, section 7) and the residual rule of #22. A record states what was observed and what was not; it is not a conformance claim.",
+  "title": "AAIF I&T delegated-authority case record (0.2)",
+  "description": "One record per implementation per case for a comparison round. Fields follow the record requirements drafted in wg-identity-and-trust #13 (terms draft 0.2, section 7) and the residual rule of #22. 0.2 takes in the reviews on wg-identity-and-trust#32: reason codes verbatim in the implementation's own case, a status identifier that need not be a counter, a status source, a status-observed flag so a record can say that a decision rested on no status read, the scope of the evidence digest, and an optional verify block for signed decisions.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "implementation", "case", "declared", "evidence", "residual"],
+  "required": [
+    "schema_version",
+    "implementation",
+    "case",
+    "declared",
+    "evidence",
+    "residual"
+  ],
   "properties": {
-    "schema_version": { "const": "aaif-aad-case-record/0.1" },
+    "schema_version": {
+      "const": "aaif-aad-case-record/0.2"
+    },
     "implementation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "release", "revision", "operator", "label"],
+      "required": [
+        "name",
+        "release",
+        "revision",
+        "operator",
+        "label"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "release": { "type": "string", "minLength": 1 },
-        "revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
-        "served_revision": { "type": "string" },
-        "operator": { "type": "string", "minLength": 1 },
-        "label": { "enum": ["independently_run", "author_operated"] },
-        "synthetic": { "type": "boolean" }
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "release": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The release as the implementation names it: a tag, or 'hosted' when the service runs the revision directly."
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "served_revision": {
+          "type": "string"
+        },
+        "operator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "enum": [
+            "independently_run",
+            "author_operated"
+          ]
+        },
+        "synthetic": {
+          "type": "boolean"
+        }
       }
     },
-    "case": { "enum": ["1", "2", "3", "4", "5", "5a", "5b", "6", "7", "8"] },
+    "case": {
+      "enum": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "5a",
+        "5b",
+        "6",
+        "7",
+        "8"
+      ]
+    },
     "declared": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status"],
+      "required": [
+        "status"
+      ],
       "properties": {
-        "status": { "enum": ["measured", "not_measured", "not_applicable", "not_emitted"] },
-        "policy": { "enum": ["stop", "finish_within", "not_applicable"] },
-        "bound_s": { "type": "number", "minimum": 0 }
+        "status": {
+          "enum": [
+            "measured",
+            "not_measured",
+            "not_applicable",
+            "not_emitted"
+          ]
+        },
+        "policy": {
+          "enum": [
+            "stop",
+            "finish_within",
+            "not_applicable"
+          ]
+        },
+        "bound_s": {
+          "type": "number",
+          "minimum": 0
+        }
       }
     },
     "start_event": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "time", "source"],
+      "required": [
+        "name",
+        "time",
+        "source"
+      ],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "time": { "type": "string", "format": "date-time" },
-        "source": { "type": "string", "minLength": 1 }
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "decision": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["time", "outcome", "reason_code"],
+      "required": [
+        "time",
+        "outcome",
+        "reason_code"
+      ],
       "properties": {
-        "time": { "type": "string", "format": "date-time" },
-        "outcome": { "enum": ["allowed", "refused", "not_observed"] },
-        "reason_code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" },
-        "path": { "type": "string" },
-        "status_version": { "type": "string" },
-        "status_age_s": { "type": "number", "minimum": 0 },
-        "declared_bound_s": { "type": "number", "minimum": 0 }
+        "time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "outcome": {
+          "enum": [
+            "allowed",
+            "refused",
+            "not_observed"
+          ]
+        },
+        "reason_code": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{1,63}$",
+          "description": "The implementation's own code, verbatim in its own case. A reader matches it against the implementation's published vocabulary, so it is not normalised to upper case."
+        },
+        "path": {
+          "type": "string"
+        },
+        "status_version": {
+          "type": "string",
+          "description": "An identifier of the status read: a monotonic version, an epoch and height pair, or an opaque status identifier."
+        },
+        "status_age_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "declared_bound_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "status_source": {
+          "enum": [
+            "decision_record",
+            "public_status_at_decision",
+            "not_applicable"
+          ],
+          "description": "Where the status fields came from: the decision's own record, the implementation's public status read by the operator at the time of the decision, or nowhere."
+        },
+        "status_observed": {
+          "type": "boolean",
+          "description": "True when the decision rested on a status read. False when the status could not be read or was not consulted; status_version and status_age_s are then absent."
+        }
       }
     },
     "in_flight": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["policy", "observed"],
+      "required": [
+        "policy",
+        "observed"
+      ],
       "properties": {
-        "policy": { "enum": ["stop", "finish_within", "not_applicable"] },
-        "observed": { "enum": ["stopped", "finished", "unknown", "not_applicable"] },
-        "target_observation": { "type": "string" }
+        "policy": {
+          "enum": [
+            "stop",
+            "finish_within",
+            "not_applicable"
+          ]
+        },
+        "observed": {
+          "enum": [
+            "stopped",
+            "finished",
+            "unknown",
+            "not_applicable"
+          ]
+        },
+        "target_observation": {
+          "type": "string"
+        }
       }
     },
     "limit": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "evidence"],
+      "required": [
+        "kind",
+        "evidence"
+      ],
       "properties": {
-        "kind": { "enum": ["fixed_allocation", "pooled_draw"] },
-        "evidence": { "type": "string", "minLength": 1 },
-        "aggregate_scope": { "type": "string" }
+        "kind": {
+          "enum": [
+            "fixed_allocation",
+            "pooled_draw"
+          ]
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aggregate_scope": {
+          "type": "string"
+        }
       }
     },
     "evidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["record_sha256"],
+      "required": [
+        "record_sha256"
+      ],
       "properties": {
-        "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
-        "uri": { "type": "string" }
+        "record_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "uri": {
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "published_bundle",
+            "private_record"
+          ],
+          "description": "What record_sha256 digests: the published bundle or manifest the record accompanies, or a private decision record that stays with the implementation."
+        },
+        "verify": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Optional. How to check the origin of the evidence: the signature scheme, the key, or a command that verifies it offline.",
+          "properties": {
+            "scheme": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            },
+            "command": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string"
+            }
+          }
+        }
       }
     },
-    "residual": { "type": "string", "minLength": 1 },
-    "notes": { "type": "string" }
+    "residual": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "string"
+    }
   },
   "allOf": [
     {
-      "if": { "properties": { "case": { "enum": ["1", "3", "4"] } }, "required": ["case"] },
-      "then": { "required": ["start_event"] }
+      "if": {
+        "properties": {
+          "case": {
+            "enum": [
+              "1",
+              "3",
+              "4"
+            ]
+          }
+        },
+        "required": [
+          "case"
+        ]
+      },
+      "then": {
+        "required": [
+          "start_event"
+        ]
+      }
     },
     {
-      "if": { "properties": { "case": { "const": "3" } }, "required": ["case"] },
-      "then": { "required": ["decision"], "properties": { "decision": { "required": ["status_age_s", "declared_bound_s"] } } }
+      "if": {
+        "properties": {
+          "case": {
+            "const": "3"
+          }
+        },
+        "required": [
+          "case"
+        ]
+      },
+      "then": {
+        "required": [
+          "decision"
+        ],
+        "properties": {
+          "decision": {
+            "required": [
+              "declared_bound_s"
+            ]
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "case": { "enum": ["5a", "5b"] } }, "required": ["case"] },
-      "then": { "required": ["limit"] }
+      "if": {
+        "properties": {
+          "case": {
+            "const": "3"
+          }
+        },
+        "required": [
+          "case"
+        ]
+      },
+      "then": {
+        "required": [
+          "decision"
+        ],
+        "properties": {
+          "decision": {
+            "required": [
+              "declared_bound_s"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "case": {
+            "const": "3"
+          },
+          "decision": {
+            "properties": {
+              "status_observed": {
+                "const": true
+              }
+            },
+            "required": [
+              "status_observed"
+            ]
+          }
+        },
+        "required": [
+          "case",
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "required": [
+              "status_age_s"
+            ]
+          }
+        }
+      }
     }
   ]
 }

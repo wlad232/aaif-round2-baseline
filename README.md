@@ -43,8 +43,8 @@ the manifest, not as a pass.
 - `mapping.md` — the ten appendix cases (1-8, 5a, 5b) mapped to the baseline: what it supplies, the file
   path that shows it, what it does not supply, and the residual.
 - `run/` — replay outputs and the manifest with their digests.
-- `schema/` — a proposed machine-readable record shape for Round 2 (`case-record.schema.json`), a
-  dependency-free validator, and two illustrative examples. The examples are shapes, not measurements.
+- `schema/` — a proposed machine-readable record shape for Round 2 (`case-record.schema.json`, version 0.2
+  after the reviews on #32), a dependency-free validator, and three illustrative examples. The examples are shapes, not measurements.
 
 ## What this does not claim
 

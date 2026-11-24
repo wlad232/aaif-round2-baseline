@@ -1,5 +1,5 @@
 {
-  "schema_version": "aaif-aad-case-record/0.1",
+  "schema_version": "aaif-aad-case-record/0.2",
   "implementation": {
     "name": "example-implementation",
     "release": "example-2026.11",
@@ -9,7 +9,10 @@
     "synthetic": true
   },
   "case": "3",
-  "declared": { "status": "measured", "bound_s": 60 },
+  "declared": {
+    "status": "measured",
+    "bound_s": 60
+  },
   "start_event": {
     "name": "revocation write",
     "time": "2026-11-20T10:00:00Z",
@@ -22,11 +25,14 @@
     "path": "issuer -> resource server",
     "status_version": "417",
     "status_age_s": 47,
-    "declared_bound_s": 60
+    "declared_bound_s": 60,
+    "status_source": "decision_record",
+    "status_observed": true
   },
   "evidence": {
     "record_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
-    "uri": "records/example/case-3.json"
+    "uri": "records/example/case-3.json",
+    "scope": "published_bundle"
   },
   "residual": "The status age is computed from the deciding party's own clock; an outside witness is needed to date the decision independently.",
   "notes": "Illustrative shape only. Not a measurement, no implementation is named."

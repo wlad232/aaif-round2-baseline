@@ -1,0 +1,41 @@
+{
+  "schema_version": "aaif-aad-case-record/0.2",
+  "implementation": {
+    "name": "example-implementation",
+    "release": "hosted",
+    "revision": "0000000000000000000000000000000000000000",
+    "served_revision": "read at opening and again at close, as the implementation's own report",
+    "operator": "example-operator",
+    "label": "independently_run",
+    "synthetic": true
+  },
+  "case": "3",
+  "declared": {
+    "status": "measured",
+    "bound_s": 60
+  },
+  "start_event": {
+    "name": "revocation write",
+    "time": "2026-11-20T10:00:00Z",
+    "source": "issuer status log, entry 418"
+  },
+  "decision": {
+    "time": "2026-11-20T10:02:10Z",
+    "outcome": "refused",
+    "reason_code": "state_unproven",
+    "status_observed": false,
+    "status_source": "not_applicable",
+    "declared_bound_s": 60
+  },
+  "in_flight": {
+    "policy": "stop",
+    "observed": "unknown",
+    "target_observation": "no target-side observation available to the operator"
+  },
+  "evidence": {
+    "record_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "scope": "published_bundle"
+  },
+  "residual": "A refusal because the status cannot be read has no status age to publish; the record says only that no status was read.",
+  "notes": "Illustrative shape only. Not a measurement. Shows a lower-case reason code used verbatim and a case-3 record with no status age."
+}
